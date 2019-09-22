@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>LIFF</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="buttongroup">
+        <div class="buttonrow">
+            <button id="openwindowbutton">Open Window</button>
+            <button id="closewindowbutton">Close Window</button>
+        </div>
+        <div class="buttonrow">
+            <button id="getaccesstoken">Get Access Token</button>
+            <button id="getprofilebutton">Get Profile</button>
+            <button id="sendmessagebutton">Send Message</button>
+        </div>
+    </div>
+
+    <div id="accesstokendata">
+        <h2>Access Token</h2>
+        <a href="#" onclick="toggleAccessToken()">Close Access Token</a>
+        <table border="1">
+            <tr>
+                <th>accessToken</th>
+                <td id="accesstokenfield"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="profileinfo">
+        <h2>Profile</h2>
+        <a href="#" onclick="toggleProfileData()">Close Profile</a>
+        <div id="profilepicturediv">
+        </div>
+        <table border="1">
+            <tr>
+                <th>userId</th>
+                <td id="useridprofilefield"></td>
+            </tr>
+            <tr>
+                <th>displayName</th>
+                <td id="displaynamefield"></td>
+            </tr>
+            <tr>
+                <th>statusMessage</th>
+                <td id="statusmessagefield"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="liffdata">
+        <h2>LIFF Data</h2>
+        <table border="1">
+            <tr>
+                <th>language</th>
+                <td id="languagefield"></td>
+            </tr>
+            <tr>
+                <th>context.viewType</th>
+                <td id="viewtypefield"></td>
+            </tr>
+            <tr>
+                <th>context.userId</th>
+                <td id="useridfield"></td>
+            </tr>
+            <tr>
+                <th>context.utouId</th>
+                <td id="utouidfield"></td>
+            </tr>
+            <tr>
+                <th>context.roomId</th>
+                <td id="roomidfield"></td>
+            </tr>
+            <tr>
+                <th>context.groupId</th>
+                <td id="groupidfield"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="player"></div>
+
+    <iframe id="player2" type="text/html" width="640" height="390"
+    src="http://www.youtube.com/embed/V_bAbvSZb1w"
+    frameborder="0">
+    </iframe>
+
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd6UlvKyBzQBmvrs9FrBpnuk31zIVpunxtfcrWO5Ienb8Drog/viewform?entry.545503525=test&embedded=true" width="640" height="1307" frameborder="0" marginheight="0" marginwidth="0">กำลังโหลด…</iframe>
+
+    <button onclick="onPLayVideo()">Play</button>
+    <button onclick="getToken()">getToken</button>
+    <button onclick="trackingItems()">trackingItems</button>
+    
+    <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+    <script src="js/liff-starter.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+  
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  
+        // 3. This function creates an <iframe> (and YouTube player)
+        //    after the API code downloads.
+        var player;
+        function onYouTubeIframeAPIReady() {
+          player = new YT.Player('player', {
+            height: '390',
+            width: '640',
+            videoId: 'V_bAbvSZb1w',
+            events: {
+              'onReady': onPlayerReady,
+              'onStateChange': onPlayerStateChange
+            }
+          });
+        }
+  
+        // 4. The API will call this function when the video player is ready.
+        function onPlayerReady(event) {
+            console.log('onPlayerReady')
+          // event.target.playVideo();
+        }
+
+        function onPLayVideo() {
+            console.log(player)
+            player.playVideo();
+        }
+  
+        // 5. The API calls this function when the player's state changes.
+        //    The function indicates that when playing a video (state=1),
+        //    the player should play for six seconds and then stop.
+        var done = false;
+        function onPlayerStateChange(event) {
+            console.log('onPlayerStateChange', event.data)
+            console.log('PLAYING', YT.PlayerState)
+          if (event.data == YT.PlayerState.PLAYING && !done) {
+            setTimeout(stopVideo, 6000);
+            done = true;
+          }
+        }
+        function stopVideo() {
+          player.stopVideo();
+        }
+
+        var BASE_URL_API = "https://trackapi.thailandpost.co.th/post/api/v1";
+        var AUTH_TOKEN =
+        "YUQuUXWMLWDNdFiM9G^CEVfEdDIIeRFE$FCRZUmP=EBBsNMVsH_I*OPFvVdL=F0MI_IGWYRdK?ZGM_JxZ!EJQOYlKAXjIbD!Lw";
+        var AUTH_TOKEN2 = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzZWN1cmUtYXBpIiwiYXVkIjoic2VjdXJlLWFwcCIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJleHAiOjE1NzE1NTc0ODEsInJvbCI6WyJST0xFX1VTRVIiXSwiZCpzaWciOnsicCI6InpXNzB4IiwicyI6bnVsbCwidSI6IjI4ZmYyNjE0ZjZkOGI5OGJlNWFhZmY1NWZiZjQzYmFiIiwiZiI6InhzeiM5In19.zrklwbPz6hOdHtaQvIpXt00KnGgKHEhzFxunYqjWtcyTo2pOQwK08SV1EFjE7sILdBlvb3qkLd5tQSKpV7fSZA'
+
+        axios.defaults.baseURL = BASE_URL_API;
+        axios.defaults.headers.common["Authorization"] = `Token ${AUTH_TOKEN2}`;
+        axios.defaults.headers.post["Content-Type"] = "application/json";
+        function getToken() {
+            axios
+            .post("/authenticate/token", {})
+            .then(function(response) {
+                console.log(response);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+        }
+
+        function trackingItems() {
+            axios
+            .post("/track", {
+                "status": "all",
+                "language": "TH",
+                "barcode": [
+                    "EP881542195TH"
+                ]
+            })
+            .then(function(response) {
+                console.log(response);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+        }
+        /* player 2 */
+        /* var player2;
+        function onYouTubeIframeAPIReady() {
+            player2 = new YT.Player('player2', {
+                events: {
+                'onReady': onPlayerReady2,
+                'onStateChange': onPlayerStateChange2
+                }
+            });
+        }
+        function onPlayerReady2(event) {
+            document.getElementById('player2').style.borderColor = '#FF6D00';
+        }
+        function onPlayerStateChange2(event) {
+            console.log('onPlayerStateChange', event.data)
+            console.log(YT.PlayerState.PLAYING)
+        } */
+      </script>
+</body>
+</html>

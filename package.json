@@ -1,0 +1,32 @@
+{
+  "name": "kitchensink",
+  "version": "0.0.0",
+  "description": "A kitchen-sink LINE bot example",
+  "main": "index.js",
+  "scripts": {
+    "build": "netlify-lambda build express",
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "@line/bot-sdk": "^6.8.2",
+    "axios": "^0.19.0",
+    "bluebird": "^3.5.5",
+    "body-parser": "^1.19.0",
+    "debug": "^4.1.1",
+    "dotenv": "^8.1.0",
+    "express": "^4.16.2",
+    "express-session": "^1.16.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "morgan": "^1.9.1",
+    "netlify-lambda": "^1.6.3",
+    "ngrok": "^2.3.0",
+    "qrcode": "^1.4.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "secure-compare": "^3.0.1",
+    "serverless-http": "^2.3.0",
+    "soap": "^0.29.0",
+    "strong-soap": "^1.21.0"
+  }
+}
